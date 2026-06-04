@@ -792,18 +792,24 @@
         }
 
         .start-btn {
-            background: #3b82f6;
+            background: linear-gradient(135deg, #2d5f3f 0%, #3d7a52 50%, #2d5f3f 100%);
             color: white;
-            padding: 16px 36px;
+            padding: 18px 36px;
             font-size: 1.05rem;
-            border-radius: 30px;
-            border: none;
-            font-weight: bold;
-            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-weight: 700;
+            box-shadow: 0 12px 28px -8px rgba(45, 95, 63, 0.65);
             cursor: pointer;
             margin-top: 24px;
             width: min(92%, 380px);
             align-self: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .start-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px -8px rgba(45, 95, 63, 0.75);
         }
 
         .start-btn:disabled {
@@ -813,43 +819,93 @@
 
         .camera-error-box {
             display: none;
-            max-width: 420px;
-            margin: 16px auto 0;
-            padding: 14px 16px;
-            border-radius: 12px;
-            background: rgba(127, 29, 29, 0.92);
-            border: 1px solid rgba(248, 113, 113, 0.7);
+            max-width: 440px;
+            margin: 20px auto 0;
+            padding: 0;
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(30, 20, 20, 0.95), rgba(50, 25, 25, 0.92));
+            border: 1px solid rgba(248, 113, 113, 0.35);
             color: #fecaca;
             text-align: left;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.6);
         }
 
         .camera-error-box.visible {
             display: block;
         }
 
+        .camera-error-inner {
+            padding: 20px 20px 18px;
+        }
+
+        .camera-error-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(248, 113, 113, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-bottom: 12px;
+        }
+
         .camera-error-box strong {
             display: block;
             color: #fff;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
 
         .camera-error-box p {
-            margin: 0 0 10px 0;
-            font-size: 0.85rem;
-            line-height: 1.45;
+            margin: 0 0 14px 0;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: #fca5a5;
+        }
+
+        .camera-error-steps {
+            margin: 0 0 14px 0;
+            padding-left: 1.2rem;
+            font-size: 0.88rem;
+            line-height: 1.55;
             color: #fecaca;
         }
 
+        .camera-error-steps li {
+            margin-bottom: 6px;
+        }
+
+        .camera-error-phone-hint {
+            display: none;
+            margin: 0 0 14px 0;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(45, 95, 63, 0.25);
+            border: 1px solid rgba(110, 231, 183, 0.35);
+            color: #a7f3d0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .camera-error-phone-hint.visible {
+            display: block;
+        }
+
         .camera-error-box .retry-btn {
-            background: #fff;
+            background: linear-gradient(135deg, #fff, #f8fafc);
             color: #991b1b;
             border: none;
-            border-radius: 20px;
-            padding: 10px 18px;
+            border-radius: 14px;
+            padding: 12px 18px;
             font-weight: 700;
             cursor: pointer;
             width: 100%;
+            font-size: 0.95rem;
         }
 
         #pre-camera-screen {
@@ -858,13 +914,56 @@
             justify-content: center;
             height: 100%;
             width: 100%;
-            background: #000;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(45, 95, 63, 0.35), transparent),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(45, 95, 63, 0.15), transparent),
+                linear-gradient(180deg, #0f1410 0%, #0a0a0a 55%, #050505 100%);
             z-index: 120;
             position: absolute;
             overflow-y: auto;
-            padding: 24px 16px 32px;
+            padding: 28px 16px 36px;
             box-sizing: border-box;
             pointer-events: auto;
+        }
+
+        .pre-camera-brand {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .pre-camera-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(45, 95, 63, 0.35);
+            border: 1px solid rgba(110, 231, 183, 0.35);
+            color: #6ee7b7;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .pre-camera-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            max-width: 440px;
+            margin: 0 auto 18px;
+        }
+
+        .pre-camera-feature-pill {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            font-size: 0.78rem;
+            font-weight: 600;
         }
 
         #pre-camera-screen.is-hidden,
@@ -895,7 +994,7 @@
             width: 48px;
             height: 48px;
             border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top-color: #3b82f6;
+            border-top-color: #6ee7b7;
             border-radius: 50%;
             animation: cam-spin 0.8s linear infinite;
         }
@@ -907,9 +1006,20 @@
         .pre-camera-title {
             text-align: center;
             margin: 0 0 8px 0;
-            font-size: clamp(1.35rem, 4.2vw, 1.75rem);
+            font-size: clamp(1.5rem, 4.5vw, 2rem);
             font-weight: 800;
             color: #fff;
+            letter-spacing: -0.03em;
+        }
+
+        .pre-camera-subbrand {
+            text-align: center;
+            color: #6ee7b7;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin: 0 0 10px 0;
         }
 
         .pre-camera-why {
@@ -930,10 +1040,13 @@
         .pre-camera-section {
             max-width: 440px;
             margin: 0 auto;
-            padding: 14px 16px;
-            border-radius: 14px;
-            background: rgba(30, 41, 59, 0.85);
-            border: 1px solid rgba(148, 163, 184, 0.35);
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(110, 231, 183, 0.18);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 16px 40px -20px rgba(0, 0, 0, 0.5);
         }
 
         .pre-camera-section-title {
@@ -941,7 +1054,7 @@
             font-weight: 800;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #94a3b8;
+            color: #6ee7b7;
             margin-bottom: 10px;
         }
 
@@ -964,18 +1077,57 @@
         .pre-camera-permission {
             max-width: 440px;
             margin: 16px auto 0;
-            padding: 12px 14px;
-            border-radius: 12px;
-            background: rgba(30, 58, 138, 0.45);
-            border: 1px solid rgba(96, 165, 250, 0.4);
-            color: #bfdbfe;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(45, 95, 63, 0.22);
+            border: 1px solid rgba(110, 231, 183, 0.3);
+            color: #bbf7d0;
             font-size: clamp(0.82rem, 2.5vw, 0.92rem);
-            line-height: 1.45;
+            line-height: 1.5;
             text-align: center;
         }
 
         .pre-camera-permission strong {
             color: #fff;
+        }
+
+        #ai-status-bar {
+            display: none;
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 130;
+            max-width: min(92vw, 420px);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            pointer-events: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        #ai-status-bar.is-visible {
+            display: block;
+        }
+
+        #ai-status-bar.state-loading {
+            background: rgba(45, 95, 63, 0.92);
+            color: #ecfdf5;
+            border: 1px solid rgba(110, 231, 183, 0.45);
+        }
+
+        #ai-status-bar.state-ready {
+            background: rgba(22, 101, 52, 0.88);
+            color: #dcfce7;
+            border: 1px solid rgba(74, 222, 128, 0.45);
+        }
+
+        #ai-status-bar.state-error {
+            background: rgba(127, 29, 29, 0.92);
+            color: #fecaca;
+            border: 1px solid rgba(248, 113, 113, 0.45);
         }
     </style>
 </head>
@@ -1007,28 +1159,44 @@
             <!-- Pre-Start Screen for mobile so browser allows camera access on click -->
             <div id="pre-camera-screen" style="display:flex;">
                 <a id="website-back-link" href="/" style="display:none;position:absolute;top:16px;left:16px;z-index:200;color:#6ee7b7;font-weight:700;text-decoration:none;font-size:14px;">← Back to Smartfitao</a>
-                <h1 class="pre-camera-title">Ready to capture</h1>
+                <div class="pre-camera-brand">
+                    <div class="pre-camera-badge">Smartfitao · Computer Vision</div>
+                    <h1 class="pre-camera-title">Body scan studio</h1>
+                    <p class="pre-camera-subbrand">543-point HEAVY AI tracking</p>
+                </div>
+                <div class="pre-camera-features" aria-hidden="true">
+                    <span class="pre-camera-feature-pill">33 body landmarks</span>
+                    <span class="pre-camera-feature-pill">Live body mask</span>
+                    <span class="pre-camera-feature-pill">A-pose guide</span>
+                </div>
                 <p id="pre-camera-why" class="pre-camera-why">
-                    We track <strong>543 points</strong> with a <strong>live body mask</strong> on you. Match the <strong>yellow A-pose guide</strong> in the box — when your pose is correct the mask turns <strong>green</strong>.
+                    We track <strong>543 points</strong> with a <strong>live body mask</strong> on you. Match the <strong>yellow A-pose guide</strong> — when your pose is correct the mask turns <strong>green</strong>.
                 </p>
                 <div class="pre-camera-section" aria-label="Pose guide">
-                    <div class="pre-camera-section-title">Pose guide — A-pose (HEAVY 543-point scan)</div>
+                    <div class="pre-camera-section-title">How to stand — A-pose</div>
                     <ul class="pre-camera-list">
                         <li>Stand <strong>full body</strong> in the highlighted box (head to feet).</li>
                         <li><strong>Feet shoulder-width</strong>, weight even on both legs.</li>
-                        <li><strong>Arms slightly away</strong> from your sides (~30–45°), like a relaxed “T” — not pressed to your body.</li>
-                        <li><strong>Face the camera</strong>; bright, even light helps all tracking points turn green.</li>
+                        <li><strong>Arms slightly away</strong> from your sides (~30–45°), like a relaxed “T”.</li>
+                        <li><strong>Face the camera</strong> in bright, even light for best accuracy.</li>
                     </ul>
                 </div>
                 <p id="pre-camera-permission" class="pre-camera-permission">
-                    <strong>One tap:</strong> Edge will ask to <strong>Allow camera</strong> — then HEAVY AI loads and tracks your body with <strong>543 points</strong>.
+                    <strong>Tap below</strong> — your browser will ask to <strong>Allow camera</strong>. Then HEAVY AI loads and tracks your body in real time.
                 </p>
-                <button type="button" class="start-btn" id="start-camera-btn">Allow camera &amp; start</button>
+                <button type="button" class="start-btn" id="start-camera-btn" onclick="window.__smartFitaoStartCamera && window.__smartFitaoStartCamera(event)">Allow camera &amp; start scan</button>
                 <button type="button" class="btn-go-tryon" id="btn-go-2d-tryon-pre" style="margin-top:14px;position:relative;top:auto;left:auto;display:none;">Go to 2D Try On</button>
                 <div id="camera-error-box" class="camera-error-box" role="alert" aria-live="assertive">
-                    <strong id="camera-error-title">Camera failed</strong>
-                    <p id="camera-error-detail"></p>
-                    <button type="button" class="retry-btn" id="retry-camera-btn">Try again</button>
+                    <div class="camera-error-inner">
+                        <div class="camera-error-icon" aria-hidden="true">📷</div>
+                        <strong id="camera-error-title">Camera unavailable</strong>
+                        <p id="camera-error-detail"></p>
+                        <ul id="camera-error-steps" class="camera-error-steps" style="display:none;"></ul>
+                        <p id="camera-error-phone-hint" class="camera-error-phone-hint">
+                            On desktop? Use the <strong>QR code above</strong> on the Smartfitao page to scan with your phone — same body scan, better camera.
+                        </p>
+                        <button type="button" class="retry-btn" id="retry-camera-btn">Try again</button>
+                    </div>
                 </div>
             </div>
 
@@ -1044,6 +1212,7 @@
             <canvas id="overlay-canvas"></canvas>
 
             <div id="debug-info">Initializing AI...</div>
+            <div id="ai-status-bar" class="state-loading" aria-live="polite"></div>
 
             <button type="button" id="btn-toggle-landmarks" class="landmarks-toggle-btn ui-content" style="display:none;" aria-expanded="false" aria-controls="accuracy-panel">
                 543 pts
@@ -1216,6 +1385,7 @@
         const instructions = document.getElementById('instructions');
         const flipCameraBtn = document.getElementById('flip-camera-btn');
         const debugInfo = document.getElementById('debug-info');
+        const aiStatusBar = document.getElementById('ai-status-bar');
 
         const loaderLayer = document.getElementById('loader-layer');
         const resultBackdrop = document.getElementById('result-backdrop');
@@ -1269,9 +1439,15 @@
         const HEAVY_VISION = {
             wasm: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm',
             poseHeavy: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_heavy/float16/latest/pose_landmarker_heavy.task',
+            poseFull: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task',
+            poseLite: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task',
             hand: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task',
             face: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task',
         };
+        const IS_MOBILE_DEVICE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+        let _poseDetectTs = 0;
+        let _aiFramesSeen = 0;
+        let _aiWatchdogTimer = null;
         /** BlazePose skeleton (used when classic POSE_CONNECTIONS global is absent). */
         const BLAZE_POSE_CONNECTIONS = [
             [0, 1], [1, 2], [2, 3], [3, 7], [0, 4], [4, 5], [5, 6], [6, 8], [9, 10],
@@ -1364,55 +1540,114 @@
         const cameraErrorBox = document.getElementById('camera-error-box');
         const cameraErrorTitle = document.getElementById('camera-error-title');
         const cameraErrorDetail = document.getElementById('camera-error-detail');
+        const cameraErrorSteps = document.getElementById('camera-error-steps');
+        const cameraErrorPhoneHint = document.getElementById('camera-error-phone-hint');
         const retryCameraBtn = document.getElementById('retry-camera-btn');
 
         function clearCameraErrorUi() {
             if (cameraErrorBox) cameraErrorBox.classList.remove('visible');
             if (cameraErrorDetail) cameraErrorDetail.textContent = '';
+            if (cameraErrorSteps) {
+                cameraErrorSteps.innerHTML = '';
+                cameraErrorSteps.style.display = 'none';
+            }
+            if (cameraErrorPhoneHint) cameraErrorPhoneHint.classList.remove('visible');
         }
 
         function cameraErrorMessage(err) {
             const name = (err && err.name) ? String(err.name) : '';
             const msg = (err && err.message) ? String(err.message) : String(err || 'Unknown error');
+            const code = (err && err.code) ? String(err.code) : '';
+
+            if (code === 'POSE_LOAD_FAILED' || name === 'PoseLoadError') {
+                return {
+                    title: 'AI models could not load',
+                    detail: 'Smartfitao needs a quick download for 543-point body tracking.',
+                    steps: [
+                        'Check your internet connection.',
+                        'Refresh this page and tap Allow camera again.',
+                        'If it still fails, try Chrome or Edge (latest version).'
+                    ]
+                };
+            }
+            if (code === 'CAMERA_API_UNAVAILABLE' || name === 'CameraApiUnavailable') {
+                return {
+                    title: 'Camera not available in this browser',
+                    detail: 'Your browser could not open the camera from this page.',
+                    steps: [
+                        'Use Chrome, Edge, or Safari on a phone or laptop with a camera.',
+                        'Allow camera permission when the browser asks.',
+                        'Close other apps that may be using the camera, then try again.'
+                    ],
+                    showPhoneHint: isWebsiteEmbedMode() && !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '')
+                };
+            }
             if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
                 return {
-                    title: 'Camera permission denied',
-                    detail: 'Choose Allow when the app or browser asks. On Android: Settings → Apps → this app → Permissions → Camera → Allow.'
+                    title: 'Camera permission blocked',
+                    detail: 'Smartfitao needs camera access for your body scan.',
+                    steps: [
+                        'Tap Try again and choose Allow when prompted.',
+                        'In browser settings, enable Camera for this site.',
+                        'On phone: Settings → Apps → Browser → Permissions → Camera → Allow.'
+                    ]
                 };
             }
             if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
                 return {
                     title: 'No camera found',
-                    detail: 'This device has no camera, or another app is using it. Close other camera apps and try again.'
+                    detail: 'We could not detect a camera on this device.',
+                    steps: [
+                        'Connect or enable your device camera.',
+                        'Close other apps using the camera.',
+                        'On desktop, scan the QR code on the Smartfitao page with your phone instead.'
+                    ],
+                    showPhoneHint: isWebsiteEmbedMode()
                 };
             }
             if (name === 'NotReadableError' || name === 'TrackStartError') {
                 return {
-                    title: 'Camera is busy',
-                    detail: 'Another app may be using the camera. Close it and tap Try again.'
+                    title: 'Camera is in use',
+                    detail: 'Another app may be using your camera right now.',
+                    steps: [
+                        'Close Zoom, Teams, Snapchat, or other camera apps.',
+                        'Wait a few seconds, then tap Try again.'
+                    ]
                 };
             }
             if (name === 'NotSupportedError') {
                 return {
                     title: 'Camera not supported here',
-                    detail: 'Use the pose server on HTTP (SMARTFITAO_HTTP=1, port 5000). Emulator: CV_CAMERA_BASE=http://10.0.2.2:5000'
+                    detail: 'This browser or page cannot access the camera.',
+                    steps: [
+                        'Open Smartfitao in Chrome or Edge (HTTPS or localhost).',
+                        'On mobile, use your phone browser — not an in-app preview.',
+                        'Or scan the QR code on the page to run the scan on your phone.'
+                    ],
+                    showPhoneHint: isWebsiteEmbedMode()
                 };
             }
             if (name === 'TimeoutError') {
                 return {
-                    title: 'Camera did not start',
-                    detail: msg
+                    title: 'Camera did not start in time',
+                    detail: msg || 'The camera took too long to respond.',
+                    steps: ['Tap Try again.', 'Restart your browser if the problem continues.']
                 };
             }
             if (name === 'OverconstrainedError') {
                 return {
                     title: 'Camera mode not supported',
-                    detail: 'Try again, or use the flip-camera button after the feed starts.'
+                    detail: 'This device does not support the requested camera mode.',
+                    steps: [
+                        'Tap Try again to use the default camera.',
+                        'Use the flip-camera button after the feed starts.'
+                    ]
                 };
             }
             return {
-                title: 'Camera failed to start',
-                detail: name ? (name + ': ' + msg) : msg
+                title: 'Could not start body scan',
+                detail: name ? msg : (msg || 'Something went wrong while opening the camera.'),
+                steps: ['Tap Try again.', 'Refresh the page if the issue continues.']
             };
         }
 
@@ -1430,6 +1665,14 @@
             const info = cameraErrorMessage(err);
             if (cameraErrorTitle) cameraErrorTitle.textContent = info.title;
             if (cameraErrorDetail) cameraErrorDetail.textContent = info.detail;
+            if (cameraErrorSteps && info.steps && info.steps.length) {
+                cameraErrorSteps.innerHTML = info.steps.map(function (s) { return '<li>' + s + '</li>'; }).join('');
+                cameraErrorSteps.style.display = 'block';
+            }
+            if (cameraErrorPhoneHint) {
+                if (info.showPhoneHint) cameraErrorPhoneHint.classList.add('visible');
+                else cameraErrorPhoneHint.classList.remove('visible');
+            }
             if (cameraErrorBox) cameraErrorBox.classList.add('visible');
             if (preCameraScreen) {
                 preCameraScreen.classList.remove('is-hidden');
@@ -1437,7 +1680,7 @@
             }
             if (instructions) {
                 instructions.style.display = 'block';
-                instructions.textContent = info.title + ' — ' + info.detail;
+                instructions.textContent = info.title;
                 instructions.className = 'ui-content instructions-panel';
                 instructions.style.backgroundColor = 'rgba(239, 68, 68, 0.85)';
             }
@@ -1454,7 +1697,7 @@
         function setStartBtnLoading(loading) {
             if (!startCameraBtn) return;
             startCameraBtn.disabled = loading;
-            startCameraBtn.textContent = loading ? 'Starting camera…' : 'Allow camera & start';
+            startCameraBtn.textContent = loading ? 'Starting camera…' : 'Allow camera & start scan';
         }
 
         function awaitFlutterCameraPermission() {
@@ -1544,6 +1787,72 @@
             await loadScriptOnce('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.js');
         }
 
+        function updateAiStatus(text, state) {
+            if (!aiStatusBar) return;
+            if (!text) {
+                aiStatusBar.classList.remove('is-visible', 'state-loading', 'state-ready', 'state-error');
+                aiStatusBar.textContent = '';
+                return;
+            }
+            aiStatusBar.textContent = text;
+            aiStatusBar.classList.add('is-visible');
+            aiStatusBar.classList.remove('state-loading', 'state-ready', 'state-error');
+            aiStatusBar.classList.add(state === 'ready' ? 'state-ready' : state === 'error' ? 'state-error' : 'state-loading');
+        }
+
+        function nextPoseDetectTimestamp() {
+            const t = performance.now();
+            _poseDetectTs = t > _poseDetectTs ? t : _poseDetectTs + 1;
+            return _poseDetectTs;
+        }
+
+        function startAiWatchdog() {
+            if (_aiWatchdogTimer) clearTimeout(_aiWatchdogTimer);
+            _aiFramesSeen = 0;
+            _aiWatchdogTimer = setTimeout(function () {
+                if (_aiFramesSeen > 0) return;
+                updateAiStatus('AI slow — stand in frame or tap Try again', 'error');
+                if (debugInfo) debugInfo.textContent = 'Body AI did not start — check mobile data/Wi‑Fi, then retry';
+            }, IS_MOBILE_DEVICE ? 22000 : 15000);
+        }
+
+        function clearAiWatchdog() {
+            if (_aiWatchdogTimer) {
+                clearTimeout(_aiWatchdogTimer);
+                _aiWatchdogTimer = null;
+            }
+        }
+
+        async function createPoseLandmarkerMobileSafe(visionNs, fileset) {
+            const models = IS_MOBILE_DEVICE
+                ? [HEAVY_VISION.poseLite, HEAVY_VISION.poseFull]
+                : [HEAVY_VISION.poseHeavy, HEAVY_VISION.poseFull];
+            const delegates = IS_MOBILE_DEVICE ? ['CPU'] : ['GPU', 'CPU'];
+            const minConf = IS_MOBILE_DEVICE ? 0.55 : 0.78;
+            for (const delegate of delegates) {
+                for (const modelAssetPath of models) {
+                    try {
+                        updateAiStatus(
+                            IS_MOBILE_DEVICE ? 'Loading body AI for phone…' : 'Loading HEAVY body AI…',
+                            'loading'
+                        );
+                        return await visionNs.PoseLandmarker.createFromOptions(fileset, {
+                            baseOptions: { modelAssetPath, delegate },
+                            runningMode: 'VIDEO',
+                            numPoses: 1,
+                            minPoseDetectionConfidence: minConf,
+                            minPosePresenceConfidence: minConf,
+                            minTrackingConfidence: minConf,
+                            outputSegmentationMasks: !IS_MOBILE_DEVICE,
+                        });
+                    } catch (e) {
+                        console.warn('PoseLandmarker failed', modelAssetPath, delegate, e);
+                    }
+                }
+            }
+            return null;
+        }
+
         async function initHeavyVisionModels() {
             if (poseLandmarker) return true;
             try {
@@ -1557,60 +1866,69 @@
                 null;
             if (visionNs && visionNs.FilesetResolver && visionNs.PoseLandmarker) {
                 try {
-                    if (cameraLoadingText) cameraLoadingText.textContent = 'Loading HEAVY pose AI (543 pts)…';
-                    const fileset = await visionNs.FilesetResolver.forVisionTasks(HEAVY_VISION.wasm);
-                    poseLandmarker = await visionNs.PoseLandmarker.createFromOptions(fileset, {
-                        baseOptions: {
-                            modelAssetPath: HEAVY_VISION.poseHeavy,
-                            delegate: 'GPU',
-                        },
-                        runningMode: 'VIDEO',
-                        numPoses: 1,
-                        minPoseDetectionConfidence: 0.78,
-                        minPosePresenceConfidence: 0.78,
-                        minTrackingConfidence: 0.78,
-                        outputSegmentationMasks: true,
-                    });
-                    try {
-                        handLandmarker = await visionNs.HandLandmarker.createFromOptions(fileset, {
-                            baseOptions: { modelAssetPath: HEAVY_VISION.hand, delegate: 'GPU' },
-                            runningMode: 'VIDEO',
-                            numHands: 2,
-                            minHandDetectionConfidence: 0.65,
-                            minHandPresenceConfidence: 0.65,
-                            minTrackingConfidence: 0.65,
-                        });
-                    } catch (handErr) {
-                        console.warn('Hand landmarker:', handErr);
+                    if (cameraLoadingText) {
+                        cameraLoadingText.textContent = IS_MOBILE_DEVICE
+                            ? 'Loading body scan AI for phone…'
+                            : 'Loading body scan AI (543 pts)…';
                     }
-                    try {
-                        faceLandmarker = await visionNs.FaceLandmarker.createFromOptions(fileset, {
-                            baseOptions: { modelAssetPath: HEAVY_VISION.face, delegate: 'GPU' },
-                            runningMode: 'VIDEO',
-                            numFaces: 1,
-                            minFaceDetectionConfidence: 0.65,
-                            minFacePresenceConfidence: 0.65,
-                            minTrackingConfidence: 0.65,
-                            outputFaceBlendshapes: false,
-                        });
-                    } catch (faceErr) {
-                        console.warn('Face landmarker:', faceErr);
+                    const fileset = await visionNs.FilesetResolver.forVisionTasks(HEAVY_VISION.wasm);
+                    poseLandmarker = await createPoseLandmarkerMobileSafe(visionNs, fileset);
+                    if (!poseLandmarker) throw new Error('PoseLandmarker create failed');
+
+                    if (!IS_MOBILE_DEVICE) {
+                        try {
+                            handLandmarker = await visionNs.HandLandmarker.createFromOptions(fileset, {
+                                baseOptions: { modelAssetPath: HEAVY_VISION.hand, delegate: 'GPU' },
+                                runningMode: 'VIDEO',
+                                numHands: 2,
+                                minHandDetectionConfidence: 0.65,
+                                minHandPresenceConfidence: 0.65,
+                                minTrackingConfidence: 0.65,
+                            });
+                        } catch (handErr) {
+                            console.warn('Hand landmarker:', handErr);
+                        }
+                        try {
+                            faceLandmarker = await visionNs.FaceLandmarker.createFromOptions(fileset, {
+                                baseOptions: { modelAssetPath: HEAVY_VISION.face, delegate: 'GPU' },
+                                runningMode: 'VIDEO',
+                                numFaces: 1,
+                                minFaceDetectionConfidence: 0.65,
+                                minFacePresenceConfidence: 0.65,
+                                minTrackingConfidence: 0.65,
+                                outputFaceBlendshapes: false,
+                            });
+                        } catch (faceErr) {
+                            console.warn('Face landmarker:', faceErr);
+                        }
                     }
                     useHeavyTasks = true;
                     _totalTrackingPoints = 33 + (handLandmarker ? 42 : 0) + (faceLandmarker ? 468 : 0);
-                    if (debugInfo) debugInfo.textContent = 'HEAVY AI · ' + _totalTrackingPoints + ' tracking points';
+                    if (debugInfo) {
+                        debugInfo.textContent = (IS_MOBILE_DEVICE ? 'Phone AI · ' : 'HEAVY AI · ')
+                            + _totalTrackingPoints + ' tracking points';
+                    }
+                    updateAiStatus(
+                        IS_MOBILE_DEVICE ? 'Body AI ready — stand full body in frame' : 'HEAVY AI ready — match A-pose',
+                        'ready'
+                    );
                     return true;
                 } catch (heavyErr) {
                     console.warn('Heavy Tasks Vision failed — classic Pose fallback:', heavyErr);
+                    updateAiStatus('Switching to classic body tracking…', 'loading');
                 }
             }
             initMediaPipeClassic();
             useHeavyTasks = false;
-            return Boolean(pose);
+            const ok = Boolean(pose);
+            if (ok) {
+                updateAiStatus('Classic body AI ready — stand in frame', 'ready');
+            }
+            return ok;
         }
 
         async function runHeavyVisionFrame() {
-            const now = performance.now();
+            const now = nextPoseDetectTimestamp();
             const poseResult = poseLandmarker.detectForVideo(video, now);
             _lastPoseVideoMs = now;
 
@@ -1813,44 +2131,58 @@
             return initHeavyVisionModels();
         }
 
+        /** Preload pose AI on phone QR + website embed while user reads intro. */
+        if (IS_MOBILE_DEVICE || (isWebsiteEmbedMode() && !isFlutterEmbedMode())) {
+            updateAiStatus(IS_MOBILE_DEVICE ? 'Preparing phone body AI…' : 'Preparing body scan AI…', 'loading');
+            ensurePoseReady()
+                .then(function (ok) {
+                    if (ok) updateAiStatus('AI ready — tap Allow camera to start', 'ready');
+                })
+                .catch(function () { updateAiStatus('', ''); });
+        }
+
         async function startCameraFlow() {
             if (_cameraFlowBusy) return;
             _cameraFlowBusy = true;
             clearCameraErrorUi();
             setStartBtnLoading(true);
-            if (preCameraScreen) {
-                preCameraScreen.classList.add('is-hidden');
-                preCameraScreen.style.display = 'none';
-            }
-            showCameraLoading('Loading HEAVY pose AI (543 pts)…');
+
             try {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw Object.assign(
+                        new Error('Camera API is not available in this browser context.'),
+                        { name: 'CameraApiUnavailable', code: 'CAMERA_API_UNAVAILABLE' }
+                    );
+                }
+
+                // Open camera FIRST while the click gesture is still valid (browser security).
+                showCameraLoading('Opening camera…');
+                const isMobileUa = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+                if (isMobileUa) await awaitFlutterCameraPermission();
+                await startCameraDirect();
+
+                if (preCameraScreen) {
+                    preCameraScreen.classList.add('is-hidden');
+                    preCameraScreen.style.display = 'none';
+                }
+                showCameraUi();
+
+                updateAiStatus('Loading body scan AI…', 'loading');
+                showCameraLoading('Loading body scan AI…');
                 const posePreOk = await ensurePoseReady();
                 if (!posePreOk) {
                     throw Object.assign(
-                        new Error('Heavy Pose AI did not load. Check internet, then refresh (MediaPipe HEAVY models).'),
-                        { name: 'NotSupportedError' }
+                        new Error('Body scan AI did not load. Check your connection and refresh the page.'),
+                        { name: 'PoseLoadError', code: 'POSE_LOAD_FAILED' }
                     );
                 }
-                showCameraLoading('Opening camera…');
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    throw Object.assign(
-                        new Error('Camera API unavailable. Open http://127.0.0.1:5003 in Edge or allow camera for this site.'),
-                        { name: 'NotSupportedError' }
-                    );
-                }
-                // Mobile WebView only — skip on Edge/desktop iframe.
-                const isMobileUa = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
-                if (isMobileUa) await awaitFlutterCameraPermission();
-
-                // Triggers Edge / Chrome permission popup on this click.
-                await startCameraDirect();
-                showCameraUi();
 
                 hideCameraLoading();
+                startAiWatchdog();
                 startPoseLoop();
                 if (debugInfo) {
                     debugInfo.textContent = useHeavyTasks
-                        ? ('HEAVY AI · ' + _totalTrackingPoints + ' pts — follow your body')
+                        ? ((IS_MOBILE_DEVICE ? 'Phone AI · ' : 'HEAVY AI · ') + _totalTrackingPoints + ' pts — follow your body')
                         : 'Stand in frame — green/blue dots = 33 landmarks';
                 }
                 initLandmarkGrid();
@@ -1864,9 +2196,12 @@
                 });
             } catch (err) {
                 console.error('startCameraFlow:', err);
-                _cameraFlowBusy = false;
+                await stopMediaStream();
+                clearAiWatchdog();
+                updateAiStatus('Camera or AI failed — tap Try again', 'error');
                 showCameraError(err);
             } finally {
+                _cameraFlowBusy = false;
                 setStartBtnLoading(false);
                 hideCameraLoading();
             }
@@ -2115,6 +2450,11 @@
             let isAPoseGood = false;
 
             if (results.poseLandmarks) {
+                _aiFramesSeen += 1;
+                if (_aiFramesSeen === 1) {
+                    clearAiWatchdog();
+                    updateAiStatus('Tracking body — match the yellow A-pose', 'ready');
+                }
                 lastHumanProbability = computeHumanProbability(results.poseLandmarks);
                 isPostureGood = validatePosture(results.poseLandmarks);
                 isAPoseGood = validateAPose(results.poseLandmarks);
