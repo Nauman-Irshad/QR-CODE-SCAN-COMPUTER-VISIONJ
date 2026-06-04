@@ -1415,8 +1415,10 @@
         /** Latest pose for capture + shutter refresh (height/weight input). */
         const _track = { lm: null, posture: false, apose: false };
 
+        const IS_MOBILE_DEVICE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+
         // State Variables
-        let currentFacingMode = 'user'; // Front camera default for selfie
+        let currentFacingMode = 'user';
         let isAppPaused = false; // Pauses AI when showing result
         let captureCountdownTimer = null;
         let captureCountdownDoneTimer = null;
@@ -1444,7 +1446,6 @@
             hand: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task',
             face: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task',
         };
-        const IS_MOBILE_DEVICE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
         let _poseDetectTs = 0;
         let _aiFramesSeen = 0;
         let _aiWatchdogTimer = null;
@@ -1496,6 +1497,9 @@
         // Always use webcam flow now (no QR/desktop gate screen).
         if (desktopView) desktopView.style.display = 'none';
         if (mobileView) mobileView.style.display = 'block';
+        if (IS_MOBILE_DEVICE && !embeddedInFrame) {
+            currentFacingMode = 'environment';
+        }
         function isFlutterEmbedMode() {
             return flutterEmbed;
         }
@@ -1607,11 +1611,31 @@
             }
             if (name === 'NotReadableError' || name === 'TrackStartError') {
                 return {
-                    title: 'Camera is in use',
-                    detail: 'Another app may be using your camera right now.',
+                    title: IS_MOBILE_DEVICE ? 'Camera could not start' : 'Camera is in use',
+                    detail: IS_MOBILE_DEVICE
+                        ? 'Your phone camera did not open. This often fixes itself on retry — not always another app.'
+                        : 'Another app may be using your camera right now.',
+                    steps: IS_MOBILE_DEVICE
+                        ? [
+                            'Tap Try again — we auto-retry with simpler camera settings.',
+                            'Use Safari or Chrome (not Instagram/WhatsApp in-app browser).',
+                            'Settings → Browser → Camera → Allow for this site.',
+                            'Force-close other apps, wait 3 seconds, refresh the page.'
+                        ]
+                        : [
+                            'Close Zoom, Teams, Snapchat, or other camera apps.',
+                            'Wait a few seconds, then tap Try again.'
+                        ]
+                };
+            }
+            if (name === 'OverconstrainedError') {
+                return {
+                    title: 'Camera mode not supported',
+                    detail: 'This phone could not use the requested camera mode.',
                     steps: [
-                        'Close Zoom, Teams, Snapchat, or other camera apps.',
-                        'Wait a few seconds, then tap Try again.'
+                        'Tap Try again — we fall back to a simpler camera mode.',
+                        'Use the flip-camera button after the feed starts.',
+                        'Try Safari or Chrome if you are in an in-app browser.'
                     ]
                 };
             }
@@ -1632,16 +1656,6 @@
                     title: 'Camera did not start in time',
                     detail: msg || 'The camera took too long to respond.',
                     steps: ['Tap Try again.', 'Restart your browser if the problem continues.']
-                };
-            }
-            if (name === 'OverconstrainedError') {
-                return {
-                    title: 'Camera mode not supported',
-                    detail: 'This device does not support the requested camera mode.',
-                    steps: [
-                        'Tap Try again to use the default camera.',
-                        'Use the flip-camera button after the feed starts.'
-                    ]
                 };
             }
             return {
@@ -2024,7 +2038,18 @@
 
         async function startCameraDirect() {
             await stopMediaStream();
-            const attempts = [
+            if (IS_MOBILE_DEVICE) {
+                await new Promise(function (r) { setTimeout(r, 400); });
+            }
+
+            const mobileAttempts = [
+                { video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+                { video: { facingMode: { ideal: 'user' }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+                { video: { facingMode: 'environment' }, audio: false },
+                { video: { facingMode: 'user' }, audio: false },
+                { video: true, audio: false },
+            ];
+            const desktopAttempts = [
                 {
                     video: {
                         facingMode: { ideal: currentFacingMode },
@@ -2045,16 +2070,34 @@
                 { video: { width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
                 { video: true, audio: false },
             ];
+            const attempts = IS_MOBILE_DEVICE ? mobileAttempts : desktopAttempts;
+
             let lastErr = null;
-            for (const constraints of attempts) {
-                try {
-                    _mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-                    lastErr = null;
-                    break;
-                } catch (e) {
-                    lastErr = e;
-                    console.warn('getUserMedia attempt failed:', e);
+            for (let round = 0; round < (IS_MOBILE_DEVICE ? 2 : 1); round++) {
+                if (round > 0) {
+                    await stopMediaStream();
+                    await new Promise(function (r) { setTimeout(r, 600); });
                 }
+                for (const constraints of attempts) {
+                    try {
+                        _mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        lastErr = null;
+                        if (constraints.video && constraints.video.facingMode) {
+                            const fm = constraints.video.facingMode;
+                            if (fm === 'environment' || fm === 'user') currentFacingMode = fm;
+                            else if (fm && fm.ideal) currentFacingMode = fm.ideal;
+                        }
+                        break;
+                    } catch (e) {
+                        lastErr = e;
+                        console.warn('getUserMedia attempt failed:', e);
+                        if (e && (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError')) {
+                            round = 99;
+                            break;
+                        }
+                    }
+                }
+                if (_mediaStream) break;
             }
             if (!_mediaStream) throw lastErr || new Error('Could not open camera');
 
