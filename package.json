@@ -1,0 +1,17 @@
+{
+  "name": "qr-code-scan-computer-visionj",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Smart Fitao body scan — browser MediaPipe + Vercel Blob upload (phone QR + 2D try-on handoff)",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "node -e \"console.log('static CV app — no build step')\""
+  },
+  "dependencies": {
+    "@vercel/blob": "^0.27.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  }
+}
