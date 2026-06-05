@@ -1,40 +1,52 @@
-# Smart Fitao — Phone photo (QR scan)
+# Smart Fitao — Phone photo (GitHub Pages)
 
-Simple phone camera for **2D try-on**. Photos stored in **Vercel Blob**.
+Simple phone camera for **2D try-on**. Hosted on **GitHub Pages** (no Vercel).
 
-**Live:** [qr-code-scan-computer-visionj.vercel.app](https://qr-code-scan-computer-visionj.vercel.app)
-
-## Vercel Blob setup (required)
-
-1. Open [Vercel Dashboard](https://vercel.com) → project **QR-CODE-SCAN-COMPUTER-VISIONJ**
-2. **Storage** → **Blob** → **Create store** (if none)
-3. Connect store to this project — Vercel adds **`BLOB_READ_WRITE_TOKEN`** automatically
-4. **Redeploy** the project
-
-Without Blob, phone upload returns: *"Vercel Blob not configured"*.
+**Live:** https://nauman-irshad.github.io/QR-CODE-SCAN-COMPUTER-VISIONJ/
 
 ## How it works
 
-1. Desktop `/2d-try-on` shows QR (session from `POST /api/phone-sync`)
-2. Phone scans QR → opens this app → capture photo
-3. Photo uploads to **Vercel Blob** (`phone-sync/{sessionId}.jpg`)
-4. Desktop polls `GET /api/phone-sync?session=…` → gets `image_url` → try-on loads photo
+1. Desktop `/2d-try-on` shows QR with a session id
+2. Phone scans QR → opens this GitHub Pages app
+3. User captures photo → saved to **Firebase Firestore** (`phone_tryon_sync`)
+4. Desktop polls Firestore → photo loads in try-on
+
+## Enable GitHub Pages (one time)
+
+1. GitHub repo → **Settings** → **Pages**
+2. **Source:** GitHub Actions (workflow deploys on push to `main`)
+
+Or: **Deploy from branch** → `main` → `/ (root)` → Save
+
+## Firestore rules (required)
+
+Firebase Console → Firestore → **Rules**:
+
+```
+match /phone_tryon_sync/{sessionId} {
+  allow read, write: if true;
+}
+```
+
+Publish rules.
 
 ## Main website env
 
-```env
-VITE_CV_PHONE_URL=https://qr-code-scan-computer-visionj.vercel.app
+```
+VITE_CV_PHONE_URL=https://nauman-irshad.github.io/QR-CODE-SCAN-COMPUTER-VISIONJ
 ```
 
-## API
+## URL params
 
-| Route | Method | Description |
-|--------|--------|-------------|
-| `/` | GET | Phone camera UI |
-| `/api/phone-sync` | POST | Create session `{ session_id }` |
-| `/api/phone-sync?session=…&upload=1` | POST | Upload photo → Vercel Blob |
-| `/api/phone-sync?session=…` | GET | Poll `{ ready, image_url }` |
-| `/qr?to=URL` | GET | QR PNG |
+| Param | Purpose |
+|--------|---------|
+| `phone_session` | Session id from desktop QR |
+
+Example:
+
+```
+https://nauman-irshad.github.io/QR-CODE-SCAN-COMPUTER-VISIONJ/?phone_session=abc123
+```
 
 ## GitHub
 
