@@ -43,17 +43,31 @@ export async function POST(req: Request): Promise<Response> {
     if (!sessionId || sessionId.length > 64) {
       return corsJson({ error: "Invalid session" }, 400);
     }
-    const form = await req.formData();
-    const photo = form.get("photo");
-    if (!photo || !(photo instanceof Blob)) {
-      return corsJson({ error: "Missing photo" }, 400);
+    try {
+      const form = await req.formData();
+      const photo = form.get("photo");
+      if (!photo || !(photo instanceof Blob)) {
+        return corsJson({ error: "Missing photo" }, 400);
+      }
+      const uploaded = await put(blobKey(sessionId), photo, {
+        access: "public",
+        addRandomSuffix: false,
+        contentType: photo.type || "image/jpeg",
+      });
+      return corsJson({ status: "ok", image_url: uploaded.url });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Upload failed";
+      if (/blob|token|BLOB/i.test(msg)) {
+        return corsJson(
+          {
+            error:
+              "Vercel Blob not configured. Add BLOB_READ_WRITE_TOKEN in Vercel → Storage → Blob.",
+          },
+          503,
+        );
+      }
+      return corsJson({ error: msg }, 500);
     }
-    const uploaded = await put(blobKey(sessionId), photo, {
-      access: "public",
-      addRandomSuffix: false,
-      contentType: photo.type || "image/jpeg",
-    });
-    return corsJson({ status: "ok", image_url: uploaded.url });
   }
 
   const newSessionId = crypto.randomUUID().replace(/-/g, "");

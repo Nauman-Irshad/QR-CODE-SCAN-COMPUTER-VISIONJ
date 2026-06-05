@@ -1,52 +1,24 @@
 # Smart Fitao — Phone photo (QR scan)
 
-Simple **phone camera** app for **2D try-on**. No pose detection, no MediaPipe, no computer vision.
-
-Deploy on Vercel — phones open over **HTTPS** and send photos to the main Smart Fitao website.
+Simple phone camera for **2D try-on**. Photos stored in **Vercel Blob**.
 
 **Live:** [qr-code-scan-computer-visionj.vercel.app](https://qr-code-scan-computer-visionj.vercel.app)
 
+## Vercel Blob setup (required)
+
+1. Open [Vercel Dashboard](https://vercel.com) → project **QR-CODE-SCAN-COMPUTER-VISIONJ**
+2. **Storage** → **Blob** → **Create store** (if none)
+3. Connect store to this project — Vercel adds **`BLOB_READ_WRITE_TOKEN`** automatically
+4. **Redeploy** the project
+
+Without Blob, phone upload returns: *"Vercel Blob not configured"*.
+
 ## How it works
 
-1. User opens **2D Try-On** on the main website (`/2d-try-on`)
-2. Desktop shows a **QR code**
-3. User scans QR on phone → opens **this Vercel app**
-4. User takes a photo (shalwar kameez) → **auto-uploads** to the website
-5. Photo appears on desktop try-on → pick kurta → run try-on
-
-## URL params (from website QR)
-
-| Param | Purpose |
-|--------|---------|
-| `phone_session` | Sync session id (created on main website) |
-| `website` | Main site origin, e.g. `https://fyp-web-code-deployment.vercel.app` |
-
-Example:
-
-```
-https://qr-code-scan-computer-visionj.vercel.app/?phone_session=abc123&website=https://fyp-web-code-deployment.vercel.app
-```
-
-## Firestore (phone → desktop photo)
-
-Phone saves the photo to Firestore collection **`phone_tryon_sync`** (document id = session id from QR).
-
-In Firebase Console → Firestore → Rules, allow (demo / FYP):
-
-```
-match /phone_tryon_sync/{sessionId} {
-  allow read, write: if true;
-}
-```
-
-Desktop `/2d-try-on` polls this collection every 2.5s.
-
-## Deploy to Vercel
-
-1. Push to [QR-CODE-SCAN-COMPUTER-VISIONJ](https://github.com/Nauman-Irshad/QR-CODE-SCAN-COMPUTER-VISIONJ)
-2. Import in Vercel → connect GitHub
-3. Optional: `BLOB_READ_WRITE_TOKEN` (only if using `/analyze` upload route)
-4. Main website needs `BLOB_READ_WRITE_TOKEN` for `/api/phone-photo-session`
+1. Desktop `/2d-try-on` shows QR (session from `POST /api/phone-sync`)
+2. Phone scans QR → opens this app → capture photo
+3. Photo uploads to **Vercel Blob** (`phone-sync/{sessionId}.jpg`)
+4. Desktop polls `GET /api/phone-sync?session=…` → gets `image_url` → try-on loads photo
 
 ## Main website env
 
@@ -59,8 +31,10 @@ VITE_CV_PHONE_URL=https://qr-code-scan-computer-visionj.vercel.app
 | Route | Method | Description |
 |--------|--------|-------------|
 | `/` | GET | Phone camera UI |
-| `/qr?to=URL` | GET | QR PNG for a URL |
-| `/analyze` | POST | Simple image upload → Blob URL (legacy proxy) |
+| `/api/phone-sync` | POST | Create session `{ session_id }` |
+| `/api/phone-sync?session=…&upload=1` | POST | Upload photo → Vercel Blob |
+| `/api/phone-sync?session=…` | GET | Poll `{ ready, image_url }` |
+| `/qr?to=URL` | GET | QR PNG |
 
 ## GitHub
 
