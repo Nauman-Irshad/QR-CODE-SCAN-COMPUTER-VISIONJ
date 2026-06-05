@@ -6,6 +6,7 @@
   "rewrites": [
     { "source": "/analyze", "destination": "/api/analyze" },
     { "source": "/qr", "destination": "/api/qr" },
+    { "source": "/api/phone-sync", "destination": "/api/phone-sync" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [

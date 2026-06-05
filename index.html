@@ -82,7 +82,6 @@
     (function () {
       var params = new URLSearchParams(location.search);
       var phoneSession = params.get('phone_session') || params.get('session') || '';
-      var website = (params.get('website') || params.get('site') || '').replace(/\/$/, '');
 
       var landing = document.getElementById('landing');
       var camera = document.getElementById('camera');
@@ -100,7 +99,7 @@
       var capturedDataUrl = null;
       var busy = false;
 
-      if (!phoneSession || !website) {
+      if (!phoneSession) {
         landing.hidden = false;
         return;
       }
@@ -180,7 +179,7 @@
           var blob = await fetch(capturedDataUrl).then(function (r) { return r.blob(); });
           var fd = new FormData();
           fd.append('photo', blob, 'tryon-photo.jpg');
-          var uploadUrl = website + '/api/phone-photo-session?session=' +
+          var uploadUrl = location.origin + '/api/phone-sync?session=' +
             encodeURIComponent(phoneSession) + '&upload=1';
           var res = await fetch(uploadUrl, { method: 'POST', body: fd });
           if (!res.ok) {
