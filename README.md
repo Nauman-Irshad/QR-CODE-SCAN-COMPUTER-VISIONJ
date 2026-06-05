@@ -27,6 +27,20 @@ Example:
 https://qr-code-scan-computer-visionj.vercel.app/?phone_session=abc123&website=https://fyp-web-code-deployment.vercel.app
 ```
 
+## Firestore (phone → desktop photo)
+
+Phone saves the photo to Firestore collection **`phone_tryon_sync`** (document id = session id from QR).
+
+In Firebase Console → Firestore → Rules, allow (demo / FYP):
+
+```
+match /phone_tryon_sync/{sessionId} {
+  allow read, write: if true;
+}
+```
+
+Desktop `/2d-try-on` polls this collection every 2.5s.
+
 ## Deploy to Vercel
 
 1. Push to [QR-CODE-SCAN-COMPUTER-VISIONJ](https://github.com/Nauman-Irshad/QR-CODE-SCAN-COMPUTER-VISIONJ)

@@ -167,26 +167,59 @@
         sendPhoto();
       }
 
+      async function compressDataUrl(dataUrl, maxWidth) {
+        return new Promise(function (resolve) {
+          var img = new Image();
+          img.onload = function () {
+            var w = img.width;
+            var h = img.height;
+            if (w > maxWidth) {
+              h = Math.round(h * (maxWidth / w));
+              w = maxWidth;
+            }
+            var c = document.createElement('canvas');
+            c.width = w;
+            c.height = h;
+            c.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(c.toDataURL('image/jpeg', 0.82));
+          };
+          img.onerror = function () { resolve(dataUrl); };
+          img.src = dataUrl;
+        });
+      }
+
+      async function saveToFirestore(sessionId, dataUrl) {
+        var apiKey = 'AIzaSyBjYPdRnwuRSAfTZDZ9fkS-f7hDQccOjOY';
+        var projectId = 'smart-fitao-web-app';
+        var url = 'https://firestore.googleapis.com/v1/projects/' + projectId +
+          '/databases/(default)/documents/phone_tryon_sync/' + sessionId + '?key=' + apiKey;
+        var res = await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fields: {
+              imageDataUrl: { stringValue: dataUrl },
+              updatedAt: { stringValue: new Date().toISOString() },
+            },
+          }),
+        });
+        if (!res.ok) {
+          var errText = await res.text();
+          throw new Error('Could not save photo (' + res.status + '). Check Firestore rules.');
+        }
+      }
+
       async function sendPhoto() {
         if (!capturedDataUrl || busy) return;
         busy = true;
         actionBtn.disabled = true;
         retakeBtn.disabled = true;
         showErr('');
-        showOk('Sending to Smart Fitao website…');
+        showOk('Sending to try-on page…');
 
         try {
-          var blob = await fetch(capturedDataUrl).then(function (r) { return r.blob(); });
-          var fd = new FormData();
-          fd.append('photo', blob, 'tryon-photo.jpg');
-          var uploadUrl = location.origin + '/api/phone-sync?session=' +
-            encodeURIComponent(phoneSession) + '&upload=1';
-          var res = await fetch(uploadUrl, { method: 'POST', body: fd });
-          if (!res.ok) {
-            var j = {};
-            try { j = await res.json(); } catch (e) {}
-            throw new Error(j.error || ('Upload failed (' + res.status + ')'));
-          }
+          var compressed = await compressDataUrl(capturedDataUrl, 960);
+          await saveToFirestore(phoneSession, compressed);
           showOk('Done! Your photo is on the try-on page — go back to your computer.');
           actionBtn.textContent = 'Sent ✓';
         } catch (e) {
